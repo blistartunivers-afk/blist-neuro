@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuaderno de Campo · El Sistema Nervioso</title>
+<meta name="description" content="Curso interactivo y gratuito sobre el sistema nervioso humano, con diagramas animados y cuestionarios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Source+Sans+3:wght@400;500;600;700&family=Kalam:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#e8ddc0;
+  --paper-2:#ddcfa9;
+  --paper-3:#f2e9cf;
+  --ink:#211a12;
+  --ink-soft:#4d4131;
+  --ink-faint:#8a7c60;
+  --impulse:#c1860f;
+  --impulse-glow:#e3ab2f;
+  --synapse:#6d3a5c;
+  --alert:#a1402a;
+  --correct:#3d6a4c;
+  --line: rgba(33,26,18,0.18);
+  --line-strong: rgba(33,26,18,0.35);
+  --radius: 3px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+}
+body{
+  margin:0;
+  background:var(--paper);
+  background-image:
+    radial-gradient(ellipse at top left, rgba(255,255,255,0.25), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(33,26,18,0.025) 0px, rgba(33,26,18,0.025) 1px, transparent 1px, transparent 3px);
+  color:var(--ink);
+  font-family:'Source Sans 3', sans-serif;
+  font-size:17px;
+  line-height:1.6;
+}
+h1,h2,h3{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  color:var(--ink);
+  margin:0 0 0.4em 0;
+}
+.hand{
+  font-family:'Kalam', cursive;
+  color:var(--synapse);
+}
+.mono{
+  font-family:'IBM Plex Mono', monospace;
+  letter-spacing:0.03em;
+}
+a{color:var(--synapse);}
+::selection{background:var(--impulse-glow); color:var(--ink);}
+
+/* progress bar */
+#progressbar{
+  position:fixed; top:0; left:0; height:4px; width:0%;
+  background:linear-gradient(90deg, var(--impulse), var(--synapse));
+  z-index:200; transition:width 0.3s ease;
+}
+
+/* layout */
+.wrap{
+  display:grid;
+  grid-template-columns: 240px 1fr;
+  max-width:1180px;
+  margin:0 auto;
+  gap:0;
+}
+@media (max-width:900px){
+  .wrap{grid-template-columns: 1fr;}
+}
+
+/* sidebar */
+nav.toc{
+  position:sticky; top:0; align-self:start;
+  height:100vh; overflow-y:auto;
+  padding:28px 18px 28px 24px;
+  border-right:1px solid var(--line);
+}
+@media (max-width:900px){
+  nav.toc{
+    position:static; height:auto; border-right:none; border-bottom:1px solid var(--line);
+    padding:16px 20px;
+  }
+}
+.toc-title{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--ink-faint); margin-bottom:14px;
+}
+.toc-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px;}
+@media (max-width:900px){ .toc-list{flex-direction:row; flex-wrap:wrap; gap:6px;} }
+.toc-list a{
+  display:flex; align-items:center; gap:8px;
+  text-decoration:none; color:var(--ink-soft);
+  font-size:14.5px; padding:7px 8px; border-radius:var(--radius);
+  transition:background 0.15s ease, color 0.15s ease;
+  border-left:2px solid transparent;
+}
+.toc-list a:hover{background:rgba(33,26,18,0.06);}
+.toc-list a.active{color:var(--ink); font-weight:600; border-left-color:var(--impulse); background:rgba(193,134,15,0.1);}
+.toc-check{
+  width:14px; height:14px; border-radius:50%; border:1.5px solid var(--ink-faint);
+  flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:9px;
+}
+.toc-check.done{background:var(--correct); border-color:var(--correct); color:#fff;}
+
+/* main content */
+main{padding:0 8px;}
+.hero{
+  padding:64px 40px 40px 40px;
+  border-bottom:1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+}
+@media (max-width:600px){ .hero{padding:40px 20px 28px;} }
+.eyebrow{
+  font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--synapse); margin-bottom:10px;
+}
+.hero h1{font-size:clamp(2rem, 5vw, 3.2rem); font-style:italic; max-width:12ch; line-height:1.05;}
+.hero p.lede{max-width:52ch; color:var(--ink-soft); font-size:18px; margin-top:12px;}
+.hero-svg-wrap{margin-top:28px;}
+
+section.module{
+  padding:52px 40px;
+  border-bottom:1px solid var(--line);
+}
+@media (max-width:600px){ section.module{padding:36px 20px;} }
+.module-eyebrow{
+  font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-faint); letter-spacing:0.1em;
+  text-transform:uppercase; margin-bottom:8px;
+}
+section.module h2{font-size:clamp(1.5rem,3.2vw,2.1rem);}
+.module-body p{max-width:64ch; color:var(--ink-soft);}
+.module-body p strong{color:var(--ink);}
+
+.diagram-card{
+  margin:28px 0; padding:20px; background:var(--paper-3);
+  border:1px solid var(--line-strong); border-radius:var(--radius);
+  position:relative;
+}
+.diagram-card svg{width:100%; height:auto; display:block;}
+.diagram-caption{
+  font-family:'Kalam', cursive; color:var(--synapse); font-size:15px; margin-top:10px; text-align:center;
+}
+
+/* quiz */
+.quiz{
+  margin-top:32px; padding:22px 24px; border:1.5px dashed var(--line-strong);
+  border-radius:var(--radius); background:rgba(255,255,255,0.35);
+}
+.quiz-label{font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-faint); margin-bottom:14px;}
+.quiz-q{margin-bottom:20px;}
+.quiz-q p{font-weight:600; color:var(--ink); margin:0 0 10px 0; max-width:60ch;}
+.quiz-options{display:flex; flex-direction:column; gap:8px;}
+.quiz-opt{
+  display:flex; align-items:center; gap:10px; padding:9px 12px;
+  border:1px solid var(--line-strong); border-radius:var(--radius);
+  cursor:pointer; background:var(--paper); font-size:15px; transition:background 0.15s ease, border-color .15s ease;
+}
+.quiz-opt:hover{background:rgba(193,134,15,0.08);}
+.quiz-opt input{accent-color:var(--synapse);}
+.quiz-opt.correct{background:rgba(61,106,76,0.15); border-color:var(--correct);}
+.quiz-opt.incorrect{background:rgba(161,64,42,0.15); border-color:var(--alert);}
+.quiz-btn{
+  margin-top:6px; font-family:'IBM Plex Mono', monospace; font-size:13px; letter-spacing:0.05em;
+  background:var(--ink); color:var(--paper-3); border:none; padding:10px 18px; border-radius:var(--radius);
+  cursor:pointer; text-transform:uppercase;
+}
+.quiz-btn:hover{background:var(--synapse);}
+.quiz-feedback{margin-top:14px; font-size:14.5px; font-weight:600;}
+.quiz-feedback.correct{color:var(--correct);}
+.quiz-feedback.incorrect{color:var(--alert);}
+
+/* labeled diagram parts */
+.leader-label{font-family:'Kalam', cursive; font-size:13px; fill:var(--synapse);}
+.diagram-ink{fill:none; stroke:var(--ink); stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+.diagram-ink-soft{fill:none; stroke:var(--ink-soft); stroke-width:1.3; stroke-linecap:round;}
+.impulse-dot{fill:var(--impulse-glow); filter:drop-shadow(0 0 4px var(--impulse));}
+.node-fill{fill:var(--paper-3); stroke:var(--ink); stroke-width:2;}
+
+/* brain regions */
+.region{fill:var(--paper); stroke:var(--ink); stroke-width:1.8; cursor:pointer; transition:fill 0.2s ease;}
+.region:hover, .region.active{fill:var(--impulse-glow);}
+.brain-panel{
+  margin-top:14px; padding:12px 16px; background:var(--paper); border:1px solid var(--line-strong);
+  border-radius:var(--radius); font-size:14.5px; color:var(--ink-soft); min-height:48px;
+}
+.brain-panel b{color:var(--ink);}
+
+/* toggle buttons for SNP */
+.toggle-row{display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+.toggle-btn{
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px; padding:7px 14px; border-radius:20px;
+  border:1.5px solid var(--line-strong); background:var(--paper); cursor:pointer; color:var(--ink-soft);
+}
+.toggle-btn.on{background:var(--ink); color:var(--paper-3); border-color:var(--ink);}
+
+footer{
+  padding:40px; text-align:center; color:var(--ink-faint); font-size:13.5px;
+  font-family:'IBM Plex Mono', monospace;
+}
+.pill{
+  display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em;
+  padding:2px 8px; border:1px solid var(--line-strong); border-radius:20px; color:var(--ink-faint); margin-right:6px;
+}
+.final-score{
+  font-family:'Fraunces', serif; font-size:2.2rem; font-style:italic; color:var(--synapse); margin:10px 0;
+}
+
+/* ---- expandable / detachable cards ("botones desprendibles") ---- */
+.expand{
+  margin:18px 0; border:1.5px solid var(--line-strong); border-radius:var(--radius);
+  background:var(--paper-3); overflow:hidden;
+}
+.expand-btn{
+  width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:14px 18px; background:none; border:none; cursor:pointer; text-align:left;
+  font-family:'Source Sans 3', sans-serif; font-size:15.5px; font-weight:600; color:var(--ink);
+}
+.expand-btn:hover{background:rgba(193,134,15,0.08);}
+.expand-btn .expand-tag{
+  font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--synapse); font-weight:500; margin-right:auto; margin-left:12px;
+}
+.expand-icon{
+  flex:none; width:24px; height:24px; border-radius:50%; border:1.5px solid var(--ink-faint);
+  display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--ink-soft);
+  transition:transform 0.25s ease, background 0.2s ease;
+}
+.expand.open .expand-icon{transform:rotate(45deg); background:var(--impulse-glow); border-color:var(--impulse);}
+.expand-panel{
+  max-height:0; overflow:hidden; transition:max-height 0.35s ease, padding 0.35s ease;
+  padding:0 18px; border-top:0px solid var(--line);
+}
+.expand.open .expand-panel{max-height:900px; padding:2px 18px 20px 18px; border-top:1px solid var(--line);}
+.expand-panel p{color:var(--ink-soft); max-width:64ch; margin:10px 0;}
+.expand-panel p strong{color:var(--ink);}
+.expand-panel ul{margin:8px 0; padding-left:20px; color:var(--ink-soft);}
+.expand-panel li{margin-bottom:6px;}
+
+/* ---- neurotransmitter cards ---- */
+.nt-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin:26px 0;}
+.nt-card{
+  padding:16px 18px; background:var(--paper-3); border:1px solid var(--line-strong); border-radius:var(--radius);
+  border-top:4px solid var(--impulse);
+}
+.nt-card.inhib{border-top-color:var(--synapse);}
+.nt-card h4{margin:0 0 4px 0; font-family:'Fraunces',serif; font-size:1.05rem; font-style:italic; color:var(--ink);}
+.nt-card .nt-role{
+  font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase;
+  color:var(--synapse); margin-bottom:8px; display:block;
+}
+.nt-card p{font-size:14.5px; color:var(--ink-soft); margin:0; max-width:none;}
+
+/* ---- disease / disorder cards ---- */
+.disease-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin:26px 0;}
+.disease-card{padding:16px 18px; background:var(--paper-3); border:1px solid var(--line-strong); border-radius:var(--radius);}
+.disease-card h4{margin:0 0 6px 0; font-size:1.05rem;}
+.disease-card .disease-target{
+  font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--alert); margin-bottom:8px; display:block;
+}
+.disease-card p{font-size:14.5px; color:var(--ink-soft); margin:0; max-width:none;}
+
+/* ---- difficulty badges on quiz questions ---- */
+.diff-badge{
+  display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.06em;
+  text-transform:uppercase; padding:2px 8px; border-radius:20px; margin-left:8px; vertical-align:middle;
+  border:1px solid var(--line-strong); color:var(--ink-faint);
+}
+.diff-badge.avanzado{color:var(--alert); border-color:var(--alert);}
+.diff-badge.aplicado{color:var(--synapse); border-color:var(--synapse);}
+
+/* ---- glossary term ---- */
+.term{border-bottom:1.5px dotted var(--ink-faint); cursor:help;}
+</style>
+
+<style>
+/* ═══════════ ASISTENTE IA FLOTANTE ═══════════ */
+#aiFab{
+  position:fixed; bottom:22px; right:22px; z-index:500;
+  width:58px; height:58px; border-radius:50%;
+  background:linear-gradient(135deg, var(--synapse), var(--impulse));
+  border:none; cursor:pointer; box-shadow:0 4px 18px rgba(33,26,18,0.35);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform 0.2s ease;
+}
+#aiFab:hover{transform:scale(1.06);}
+#aiFab svg{width:26px; height:26px;}
+#aiFab .pulse{
+  position:absolute; inset:-4px; border-radius:50%;
+  border:2px solid var(--impulse-glow); opacity:0;
+  animation:aiPulse 2.6s ease-out infinite;
+}
+@keyframes aiPulse{
+  0%{opacity:0.6; transform:scale(0.9);}
+  100%{opacity:0; transform:scale(1.35);}
+}
+#aiPanel{
+  position:fixed; bottom:92px; right:22px; z-index:500;
+  width:360px; max-width:calc(100vw - 32px); max-height:min(600px, 74vh);
+  background:var(--paper-3); border:1px solid var(--line-strong); border-radius:10px;
+  box-shadow:0 10px 40px rgba(33,26,18,0.4);
+  display:none; flex-direction:column; overflow:hidden;
+}
+#aiPanel.open{display:flex;}
+.ai-head{
+  padding:14px 16px; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--paper-2);
+}
+.ai-head-title{font-family:'Fraunces',serif; font-weight:600; font-size:15px;}
+.ai-head-sub{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-faint); margin-top:2px;}
+.ai-head-btns{display:flex; gap:6px;}
+.ai-icon-btn{
+  background:none; border:1px solid var(--line-strong); border-radius:6px;
+  width:28px; height:28px; cursor:pointer; color:var(--ink-soft); font-size:14px;
+  display:flex; align-items:center; justify-content:center;
+}
+.ai-icon-btn:hover{background:rgba(33,26,18,0.06);}
+
+.ai-body{flex:1; overflow-y:auto; padding:16px;}
+.ai-setup p{font-size:13.5px; color:var(--ink-soft); margin:0 0 12px 0;}
+.ai-setup a{color:var(--synapse);}
+.ai-field{margin-bottom:12px;}
+.ai-field label{
+  display:block; font-family:'IBM Plex Mono',monospace; font-size:10.5px;
+  text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); margin-bottom:5px;
+}
+.ai-field input, .ai-field select{
+  width:100%; padding:9px 10px; border:1px solid var(--line-strong); border-radius:6px;
+  background:var(--paper); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:13px;
+}
+.ai-btn{
+  width:100%; padding:10px; border:none; border-radius:6px; cursor:pointer;
+  background:var(--impulse); color:#fff; font-weight:600; font-size:14px;
+  font-family:'Source Sans 3',sans-serif;
+}
+.ai-btn:disabled{opacity:0.55; cursor:wait;}
+.ai-btn-secondary{
+  background:none; border:1px solid var(--line-strong); color:var(--ink-soft);
+  width:auto; padding:6px 12px; font-size:12.5px; font-weight:500;
+}
+.ai-error{
+  margin-top:10px; padding:10px 12px; border-radius:6px; font-size:12.5px;
+  background:rgba(161,64,42,0.1); border:1px solid var(--alert); color:var(--alert);
+  display:none;
+}
+.ai-error.show{display:block;}
+.ai-hint{font-size:11.5px; color:var(--ink-faint); margin-top:8px;}
+
+.ai-chat{display:none; flex-direction:column; height:100%;}
+.ai-chat.active{display:flex;}
+.ai-msgs{flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px;}
+.ai-msg{max-width:88%; font-size:13.5px; line-height:1.5; padding:9px 12px; border-radius:8px;}
+.ai-msg.user{align-self:flex-end; background:var(--synapse); color:#fff;}
+.ai-msg.bot{align-self:flex-start; background:var(--paper); border:1px solid var(--line);}
+.ai-msg.bot.thinking{color:var(--ink-faint); font-style:italic;}
+.ai-inputrow{
+  display:flex; gap:8px; padding:12px 14px; border-top:1px solid var(--line); background:var(--paper-2);
+}
+.ai-inputrow input{
+  flex:1; padding:9px 11px; border:1px solid var(--line-strong); border-radius:6px;
+  background:var(--paper); font-family:'Source Sans 3',sans-serif; font-size:13.5px;
+}
+.ai-inputrow button{
+  background:var(--impulse); color:#fff; border:none; border-radius:6px;
+  padding:0 16px; cursor:pointer; font-weight:600;
+}
+.ai-inputrow button:disabled{opacity:0.5;}
+.ai-footer{
+  padding:6px 14px; font-family:'IBM Plex Mono',monospace; font-size:10.5px;
+  color:var(--ink-faint); border-top:1px dashed var(--line); background:var(--paper-2);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.ai-footer button{background:none; border:none; color:var(--synapse); cursor:pointer; font:inherit; padding:0;}
+@media (max-width:600px){
+  #aiPanel{right:14px; left:14px; width:auto; bottom:86px;}
+  #aiFab{right:16px; bottom:16px;}
+}
+</style>
+</head>
+<body>
+
+<div id="progressbar"></div>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Contenido del curso">
+    <div class="toc-title">Cuaderno de campo</div>
+    <ul class="toc-list" id="tocList">
+      <li><a href="#intro" data-section="intro"><span class="toc-check" data-check="intro"></span>Introducción</a></li>
+      <li><a href="#neurona" data-section="neurona"><span class="toc-check" data-check="neurona"></span>La neurona</a></li>
+      <li><a href="#glia" data-section="glia"><span class="toc-check" data-check="glia"></span>Células gliales</a></li>
+      <li><a href="#sinapsis" data-section="sinapsis"><span class="toc-check" data-check="sinapsis"></span>La sinapsis</a></li>
+      <li><a href="#neurotransmisores" data-section="neurotransmisores"><span class="toc-check" data-check="neurotransmisores"></span>Neurotransmisores</a></li>
+      <li><a href="#snc" data-section="snc"><span class="toc-check" data-check="snc"></span>Sistema Nervioso Central</a></li>
+      <li><a href="#snp" data-section="snp"><span class="toc-check" data-check="snp"></span>Sistema Nervioso Periférico</a></li>
+      <li><a href="#plasticidad" data-section="plasticidad"><span class="toc-check" data-check="plasticidad"></span>Neuroplasticidad</a></li>
+      <li><a href="#reflejo" data-section="reflejo"><span class="toc-check" data-check="reflejo"></span>El arco reflejo</a></li>
+      <li><a href="#trastornos" data-section="trastornos"><span class="toc-check" data-check="trastornos"></span>Cuando algo falla</a></li>
+      <li><a href="#final" data-section="final"><span class="toc-check" data-check="final"></span>Evaluación final</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow">Curso libre y gratuito · No requiere registro</div>
+      <h1>El sistema nervioso, observado de cerca</h1>
+      <p class="lede">Un cuaderno interactivo para entender cómo tu cuerpo piensa, siente y reacciona — desde la neurona individual hasta el reflejo que retira tu mano del fuego.</p>
+      <div class="hero-svg-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="Diagrama animado de una neurona transmitiendo un impulso">
+          <path class="diagram-ink-soft" d="M40 60 C60 40, 70 30, 90 35 M40 80 C55 70, 65 68, 85 72 M40 100 C55 105, 65 108, 85 105 M40 120 C58 135, 68 140, 88 130"/>
+          <ellipse class="node-fill" cx="130" cy="95" rx="42" ry="36"/>
+          <path id="axonPath" class="diagram-ink" d="M172 95 C 260 95, 300 60, 360 95 C 410 120, 440 70, 470 95 C 495 115, 520 95, 560 95"/>
+          <g class="diagram-ink-soft">
+            <ellipse cx="230" cy="80" rx="18" ry="9"/>
+            <ellipse cx="290" cy="75" rx="18" ry="9"/>
+            <ellipse cx="420" cy="108" rx="16" ry="8"/>
+          </g>
+          <path class="diagram-ink" d="M560 95 C 575 80, 590 78, 605 65 M560 95 C 580 95, 590 95, 608 95 M560 95 C 575 112, 590 118, 606 128"/>
+          <circle class="node-fill" r="4" cx="605" cy="65"/>
+          <circle class="node-fill" r="4" cx="608" cy="95"/>
+          <circle class="node-fill" r="4" cx="606" cy="128"/>
+          <circle class="impulse-dot" r="7">
+            <animateMotion dur="2.8s" repeatCount="indefinite">
+              <mpath href="#axonPath"/>
+            </animateMotion>
+          </circle>
+          <text class="leader-label" x="60" y="20">dendritas</text>
+          <text class="leader-label" x="105" y="150">soma</text>
+          <text class="leader-label" x="330" y="35">axón (con mielina)</text>
+          <text class="leader-label" x="555" y="45">botones terminales</text>
+        </svg>
+      </div>
+    </header>
+
+    <!-- INTRO -->
+    <section class="module" id="intro">
+      <div class="module-eyebrow">Módulo 1</div>
+      <h2>¿Qué es el sistema nervioso?</h2>
+      <div class="module-body">
+        <p>El sistema nervioso es la red de comunicación del cuerpo. Recoge información del entorno y del propio organismo, la interpreta, y genera una respuesta — desde apartar la mano de una superficie caliente hasta recordar el nombre de un amigo.</p>
+        <p>Se divide en dos grandes partes que veremos en este curso: el <strong>Sistema Nervioso Central (SNC)</strong>, formado por el encéfalo y la médula espinal, que actúa como centro de mando; y el <strong>Sistema Nervioso Periférico (SNP)</strong>, la red de nervios que conecta ese centro con el resto del cuerpo.</p>
+        <p>La unidad básica que hace todo esto posible es una célula especializada: <strong>la neurona</strong>. Empecemos por ahí.</p>
+      </div>
+      <div class="quiz" id="quiz-intro">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- NEURONA -->
+    <section class="module" id="neurona">
+      <div class="module-eyebrow">Módulo 2</div>
+      <h2>La neurona: anatomía de una señal</h2>
+      <div class="module-body">
+        <p>Una neurona tiene tres partes funcionales: las <strong>dendritas</strong>, que reciben señales de otras neuronas; el <strong>soma</strong> (cuerpo celular), que integra esa información; y el <strong>axón</strong>, un largo cable que transmite el impulso hacia otras células, terminando en los <strong>botones terminales</strong>.</p>
+        <p>Muchos axones están recubiertos de <strong>mielina</strong>, una capa grasa que actúa como aislante. La señal no viaja de forma continua sino que "salta" entre los espacios sin mielina (nodos de Ranvier), lo que acelera enormemente la transmisión — hasta 120 metros por segundo.</p>
+      </div>
+
+      <div class="diagram-card">
+        <svg id="apGraph" viewBox="0 0 520 220" role="img" aria-label="Gráfico del potencial de acción en función del tiempo">
+          <line class="diagram-ink-soft" x1="50" y1="20" x2="50" y2="190"/>
+          <line class="diagram-ink-soft" x1="50" y1="190" x2="500" y2="190"/>
+          <text class="leader-label" x="8" y="60">+30mV</text>
+          <text class="leader-label" x="8" y="130">-70mV</text>
+          <text class="leader-label" x="440" y="205">tiempo</text>
+          <line class="diagram-ink-soft" x1="50" y1="130" x2="500" y2="130" stroke-dasharray="2 4"/>
+          <path id="apPath" class="diagram-ink" stroke="var(--impulse)" stroke-width="2.5"
+            d="M50 130 L160 130 C 180 130, 190 40, 210 40 C 225 40, 230 175, 250 175 C 270 175, 280 130, 320 130 L500 130"
+            pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+          <text class="leader-label" x="185" y="30">despolarización</text>
+          <text class="leader-label" x="235" y="200">hiperpolarización</text>
+        </svg>
+        <div class="diagram-caption">El potencial de acción: un impulso de todo o nada</div>
+      </div>
+
+      <div class="module-body">
+        <p>Cuando la suma de señales que llega a una neurona supera un <strong>umbral</strong>, se dispara un potencial de acción: canales iónicos se abren, el voltaje interior sube bruscamente (despolarización), y luego se restablece (repolarización), a menudo pasando brevemente por debajo del punto de partida. Es una respuesta de "todo o nada": o se dispara completa, o no se dispara.</p>
+      </div>
+
+      <div class="quiz" id="quiz-neurona">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- GLIA -->
+    <section class="module" id="glia">
+      <div class="module-eyebrow">Módulo 3</div>
+      <h2>Células gliales: el equipo de soporte</h2>
+      <div class="module-body">
+        <p>Las neuronas no trabajan solas. Por cada neurona hay aproximadamente otra célula de <strong>neuroglia</strong> (o célula glial) que la sostiene, alimenta, aísla y limpia. A diferencia de las neuronas, la glía no dispara impulsos eléctricos — pero sin ella, el sistema nervioso dejaría de funcionar en cuestión de horas.</p>
+        <p>En el <span class="term" title="Sistema Nervioso Central">SNC</span> destacan tres tipos: los <strong>astrocitos</strong>, células con forma de estrella que regulan el entorno químico de las neuronas y mantienen la barrera hematoencefálica (el filtro que decide qué sustancias de la sangre pueden entrar al cerebro); los <strong>oligodendrocitos</strong>, que fabrican la mielina; y la <strong>microglía</strong>, el sistema inmune propio del cerebro, que vigila y elimina desechos o células dañadas. En el <span class="term" title="Sistema Nervioso Periférico">SNP</span>, esa función mielinizante la cumplen las <strong>células de Schwann</strong>.</p>
+      </div>
+
+      <div class="diagram-card">
+        <svg viewBox="0 0 560 260" role="img" aria-label="Diagrama de células gliales alrededor de un axón: oligodendrocito, astrocito y microglía">
+          <line class="diagram-ink" x1="40" y1="150" x2="520" y2="150" stroke-width="2"/>
+          <rect x="88" y="141" width="58" height="18" rx="9" class="node-fill"/>
+          <rect x="176" y="141" width="58" height="18" rx="9" class="node-fill"/>
+          <rect x="264" y="141" width="58" height="18" rx="9" class="node-fill"/>
+          <circle cx="205" cy="66" r="15" class="node-fill"/>
+          <path class="diagram-ink-soft" d="M205 81 C178 100, 140 122, 118 141" fill="none"/>
+          <path class="diagram-ink-soft" d="M205 81 C205 100, 204 122, 202 141" fill="none"/>
+          <path class="diagram-ink-soft" d="M205 81 C230 100, 272 122, 290 141" fill="none"/>
+          <text class="leader-label" x="150" y="42">oligodendrocito</text>
+          <text class="leader-label" x="150" y="185">nodo de Ranvier (sin mielina)</text>
+
+          <g>
+            <path class="diagram-ink-soft" stroke="var(--synapse)" stroke-width="1.6" fill="none" d="M420 190 L420 152 M420 190 L398 212 M420 190 L440 213 M420 190 L394 178 M420 190 L446 176 M420 190 L408 227 M420 190 L433 228"/>
+            <circle cx="420" cy="190" r="9" class="node-fill" stroke="var(--synapse)"/>
+          </g>
+          <text class="leader-label" x="435" y="150">astrocito</text>
+          <path class="diagram-ink-soft" d="M475 88 C 496 128, 496 172, 475 214" fill="none" stroke-width="3"/>
+          <text class="leader-label" x="452" y="78">capilar sanguíneo</text>
+
+          <g>
+            <circle cx="68" cy="218" r="6" class="node-fill"/>
+            <path class="diagram-ink-soft" stroke-width="1.2" fill="none" d="M68 212 C58 200,54 194,48 182 M68 212 C74 200,80 192,86 178 M74 222 C88 222,97 226,108 231 M62 224 C53 231,46 236,36 240 M68 226 C66 236,64 244,62 253"/>
+          </g>
+          <text class="leader-label" x="10" y="252">microglía (vigilancia inmune)</text>
+        </svg>
+        <div class="diagram-caption">Un solo oligodendrocito puede mielinizar segmentos de varios axones a la vez</div>
+      </div>
+
+      <div class="expand">
+        <button class="expand-btn" type="button" aria-expanded="false">
+          <span>¿Sabías que...? Oligodendrocitos vs. células de Schwann</span>
+          <span class="expand-tag">saber más</span>
+          <span class="expand-icon">+</span>
+        </button>
+        <div class="expand-panel">
+          <p>Aunque cumplen la misma función — envolver el axón en mielina —, no trabajan igual. Un <strong>oligodendrocito</strong> del SNC extiende varios brazos y puede mielinizar entre <strong>20 y 60 segmentos de axones distintos</strong> a la vez. Una <strong>célula de Schwann</strong> del SNP, en cambio, envuelve un único segmento de un único axón.</p>
+          <p>Esta diferencia importa clínicamente: cuando se daña un nervio periférico, las células de Schwann pueden ayudar a guiar su regeneración; los axones del SNC, rodeados de oligodendrocitos, se regeneran con mucha más dificultad — una de las razones por las que las lesiones de médula espinal son tan difíciles de revertir.</p>
+          <p>Las <strong>células ependimarias</strong>, un cuarto tipo de glía del SNC que no aparece en el diagrama, recubren las cavidades internas del cerebro (los ventrículos) y producen y hacen circular el <strong>líquido cefalorraquídeo</strong>, que amortigua el encéfalo y la médula espinal.</p>
+        </div>
+      </div>
+
+      <div class="quiz" id="quiz-glia">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- SINAPSIS -->
+    <section class="module" id="sinapsis">
+      <div class="module-eyebrow">Módulo 4</div>
+      <h2>La sinapsis: el espacio entre dos neuronas</h2>
+      <div class="module-body">
+        <p>Las neuronas no se tocan entre sí. Entre el botón terminal de una y la dendrita de la siguiente hay un espacio diminuto: la <strong>hendidura sináptica</strong>. Cuando el impulso eléctrico llega al final del axón, provoca la liberación de <strong>neurotransmisores</strong> — mensajeros químicos guardados en pequeñas vesículas.</p>
+        <p>Estos neurotransmisores cruzan la hendidura y se unen a receptores en la neurona siguiente, lo que puede excitarla (acercarla a disparar su propio impulso) o inhibirla. Dopamina, serotonina y glutamato son ejemplos conocidos, cada uno con efectos distintos sobre el estado de ánimo, la atención o el movimiento.</p>
+      </div>
+
+      <div class="diagram-card">
+        <svg viewBox="0 0 500 200" role="img" aria-label="Diagrama animado de una sinapsis liberando neurotransmisores">
+          <path class="diagram-ink" d="M20 100 C 90 60, 140 60, 190 100 C 205 112, 205 130, 190 140" fill="none"/>
+          <path class="diagram-ink" d="M480 100 C 410 60, 360 60, 310 100 C 295 112, 295 130, 310 140" fill="none"/>
+          <rect x="188" y="60" width="6" height="90" fill="var(--ink)"/>
+          <rect x="306" y="60" width="6" height="90" fill="var(--ink)"/>
+          <circle class="synapse-vesicle" cx="215" cy="80" r="6" fill="var(--synapse)"/>
+          <circle class="synapse-vesicle" cx="215" cy="105" r="6" fill="var(--synapse)" style="animation-delay:0.6s"/>
+          <circle class="synapse-vesicle" cx="215" cy="130" r="6" fill="var(--synapse)" style="animation-delay:1.2s"/>
+          <circle cx="330" cy="80" r="4" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+          <circle cx="330" cy="105" r="4" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+          <circle cx="330" cy="130" r="4" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+          <text class="leader-label" x="90" y="40">neurona presináptica</text>
+          <text class="leader-label" x="330" y="40">neurona postsináptica</text>
+          <text class="leader-label" x="215" y="180">hendidura sináptica</text>
+          <style>
+            .synapse-vesicle{ animation: vesicleFire 2.4s ease-in-out infinite; }
+            @keyframes vesicleFire{
+              0%{ transform: translateX(0); opacity:1; }
+              45%{ transform: translateX(95px); opacity:1; }
+              55%{ transform: translateX(95px); opacity:0; }
+              56%{ transform: translateX(0); opacity:0; }
+              70%{ opacity:1; }
+              100%{ transform: translateX(0); opacity:1; }
+            }
+          </style>
+        </svg>
+        <div class="diagram-caption">Las vesículas liberan neurotransmisores que cruzan la hendidura</div>
+      </div>
+
+      <div class="quiz" id="quiz-sinapsis">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- NEUROTRANSMISORES -->
+    <section class="module" id="neurotransmisores">
+      <div class="module-eyebrow">Módulo 5</div>
+      <h2>Neurotransmisores: los mensajeros químicos</h2>
+      <div class="module-body">
+        <p>Existen más de cien neurotransmisores identificados, pero un puñado explica buena parte de lo que sentimos, pensamos y hacemos. Cada uno actúa sobre receptores específicos y puede ser <strong>excitador</strong> (acerca a la neurona receptora a disparar) o <strong>inhibidor</strong> (la aleja de disparar) — la conducta y el estado de ánimo dependen del equilibrio entre ambos.</p>
+      </div>
+
+      <div class="nt-grid">
+        <div class="nt-card">
+          <span class="nt-role">Excitador · aminoácido</span>
+          <h4>Glutamato</h4>
+          <p>El principal neurotransmisor excitador del SNC. Esencial para el aprendizaje y la formación de recuerdos.</p>
+        </div>
+        <div class="nt-card inhib">
+          <span class="nt-role">Inhibidor · aminoácido</span>
+          <h4>GABA</h4>
+          <p>El principal freno del sistema nervioso. Reduce la excitabilidad neuronal y promueve la calma.</p>
+        </div>
+        <div class="nt-card">
+          <span class="nt-role">Monoamina</span>
+          <h4>Dopamina</h4>
+          <p>Motivación, placer y recompensa; también control motor fino. Su déficit se asocia al Parkinson.</p>
+        </div>
+        <div class="nt-card">
+          <span class="nt-role">Monoamina</span>
+          <h4>Serotonina</h4>
+          <p>Regula el estado de ánimo, el sueño y el apetito. Niveles bajos se relacionan con la depresión.</p>
+        </div>
+        <div class="nt-card">
+          <span class="nt-role">Amina · SNC y SNP</span>
+          <h4>Acetilcolina</h4>
+          <p>El primer neurotransmisor descubierto. Activa músculos esqueléticos y participa en memoria y atención.</p>
+        </div>
+        <div class="nt-card">
+          <span class="nt-role">Monoamina · SNA</span>
+          <h4>Noradrenalina</h4>
+          <p>Motor de la respuesta de alerta y "lucha o huida"; sube el ritmo cardíaco y la atención.</p>
+        </div>
+      </div>
+
+      <div class="expand">
+        <button class="expand-btn" type="button" aria-expanded="false">
+          <span>¿Cómo "encaja" un neurotransmisor en su receptor?</span>
+          <span class="expand-tag">saber más</span>
+          <span class="expand-icon">+</span>
+        </button>
+        <div class="expand-panel">
+          <p>Cada neurotransmisor tiene una forma molecular específica que sólo encaja en ciertos receptores de la membrana postsináptica — como una llave y una cerradura. Al encajar, el receptor puede abrir un canal iónico directamente (respuesta rápida, en milisegundos) o activar una cascada química interna a través de una proteína G (respuesta más lenta pero prolongada).</p>
+          <p>Después de actuar, el neurotransmisor no queda flotando: se recicla por <strong>recaptación</strong> hacia la neurona que lo liberó, se degrada por enzimas, o se difunde fuera de la hendidura. Muchos fármacos psiquiátricos — como los antidepresivos ISRS — actúan justamente ahí, bloqueando la recaptación de serotonina para que permanezca más tiempo activa en la hendidura sináptica.</p>
+        </div>
+      </div>
+
+      <div class="quiz" id="quiz-neurotransmisores">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- SNC -->
+    <section class="module" id="snc">
+      <div class="module-eyebrow">Módulo 6</div>
+      <h2>Sistema Nervioso Central</h2>
+      <div class="module-body">
+        <p>El SNC está formado por el <strong>encéfalo</strong> (cerebro, cerebelo y tronco encefálico) y la <strong>médula espinal</strong>, protegidos por el cráneo y la columna vertebral. Toca cada región del siguiente diagrama para conocer su función principal.</p>
+      </div>
+
+      <div class="diagram-card">
+        <svg viewBox="0 0 480 320" role="img" aria-label="Diagrama anatómico interactivo del encéfalo, visto de perfil">
+          <!-- silhouette realista de perfil -->
+          <path class="diagram-ink" fill="none" stroke-width="2" d="M58,148 C50,120 52,102 66,96 C82,60 110,42 150,34 C190,27 225,28 260,32 C300,37 330,44 350,58 C378,78 396,96 398,118 C400,135 396,148 392,158 C386,170 378,176 368,178 C356,181 344,186 330,192 C316,190 306,188 300,185 C288,192 280,200 278,210 C274,225 270,236 268,245 C255,240 244,236 235,232 C215,226 190,226 170,224 C148,221 130,212 120,200 C104,192 92,184 85,175 C74,166 62,158 58,148 Z"/>
+          <path class="diagram-ink-soft" fill="none" d="M268,245 C264,262 262,278 262,292"/>
+          <text class="leader-label" x="222" y="308">médula espinal</text>
+
+          <!-- textura de circunvoluciones (surcos) -->
+          <g class="diagram-ink-soft" fill="none" stroke-width="1">
+            <path d="M95,130 C102,122 110,124 116,117"/>
+            <path d="M110,105 C118,97 127,99 134,91"/>
+            <path d="M140,75 C150,68 160,70 168,63"/>
+            <path d="M175,52 C188,46 200,48 210,43"/>
+            <path d="M225,40 C238,36 250,38 262,36"/>
+            <path d="M278,42 C290,40 300,45 310,45"/>
+            <path d="M150,155 C160,148 172,150 180,143"/>
+            <path d="M155,180 C166,175 178,178 188,172"/>
+            <path d="M330,70 C340,66 348,70 355,68"/>
+          </g>
+          <!-- folia del cerebelo (líneas paralelas apretadas) -->
+          <g class="diagram-ink-soft" fill="none" stroke-width="1">
+            <path d="M312,160 C325,157 340,158 355,163"/>
+            <path d="M308,170 C322,167 338,168 352,173"/>
+            <path d="M310,180 C324,178 338,179 350,183"/>
+          </g>
+
+          <!-- zonas interactivas superpuestas -->
+          <path class="region" data-region="frontal" d="M58,148 C50,120 52,102 66,96 C82,60 110,42 150,34 C175,29 195,30 205,35 C210,55 195,85 175,110 C155,130 125,145 95,150 C80,152 66,151 58,148 Z" data-label="Lóbulo frontal" data-desc="Planificación, toma de decisiones, control de impulsos, lenguaje expresivo (área de Broca) y movimiento voluntario."/>
+          <path class="region" data-region="parietal" d="M205,35 C225,28 245,29 260,32 C285,36 305,42 320,55 C315,75 295,100 265,120 C240,135 210,142 185,135 C175,120 185,90 195,65 C198,55 200,45 205,35 Z" data-label="Lóbulo parietal" data-desc="Integra sensaciones táctiles, temperatura, dolor y orientación espacial: te ayuda a saber dónde está tu cuerpo en el espacio."/>
+          <path class="region" data-region="occipital" d="M320,55 C350,60 378,80 392,110 C396,128 390,145 378,155 C360,160 335,150 315,130 C305,110 305,90 310,75 C312,68 316,60 320,55 Z" data-label="Lóbulo occipital" data-desc="Dedicado casi por completo al procesamiento de la información visual que llega desde los ojos."/>
+          <path class="region" data-region="temporal" d="M175,110 C195,105 210,110 220,125 C232,145 235,170 225,195 C210,215 180,222 155,215 C140,205 130,185 130,165 C130,145 150,120 175,110 Z" data-label="Lóbulo temporal" data-desc="Audición, comprensión del lenguaje (área de Wernicke), reconocimiento de rostros y memoria a largo plazo."/>
+          <path class="region" data-region="cerebellum" d="M330,150 C350,150 368,160 368,178 C366,195 350,205 330,203 C312,200 300,188 302,172 C304,158 315,150 330,150 Z" data-label="Cerebelo" data-desc="Coordinación motora, equilibrio y ajuste fino del movimiento. Pese a ocupar solo ~10% del volumen del encéfalo, contiene más de la mitad de todas sus neuronas."/>
+          <path class="region" data-region="stem" d="M278,168 C288,170 296,178 298,190 C296,205 288,222 278,238 C270,225 266,210 268,196 C270,182 272,174 278,168 Z" data-label="Tronco encefálico" data-desc="Regula funciones vitales automáticas: respiración, ritmo cardíaco, presión arterial y el ciclo de sueño-vigilia."/>
+        </svg>
+        <div id="brainPanel" class="brain-panel">Toca una región para leer su función.</div>
+      </div>
+
+      <div class="quiz" id="quiz-snc">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- SNP -->
+    <section class="module" id="snp">
+      <div class="module-eyebrow">Módulo 7</div>
+      <h2>Sistema Nervioso Periférico</h2>
+      <div class="module-body">
+        <p>El SNP conecta el SNC con el resto del cuerpo mediante nervios craneales y espinales. Se divide en dos ramas: la <strong>somática</strong>, que controla los movimientos voluntarios de los músculos esqueléticos y transmite sensaciones conscientes; y la <strong>autónoma</strong>, que regula funciones involuntarias como la digestión, el ritmo cardíaco o la sudoración.</p>
+        <p>A su vez, el sistema autónomo tiene dos modos complementarios: el <strong>simpático</strong> ("lucha o huida", que acelera el cuerpo ante una amenaza) y el <strong>parasimpático</strong> ("descanso y digestión", que lo calma y restaura). Usa los botones para ver cada capa sobre el diagrama.</p>
+      </div>
+
+      <div class="diagram-card">
+        <div class="toggle-row">
+          <button class="toggle-btn on" data-layer="somatic">Somático</button>
+          <button class="toggle-btn on" data-layer="autonomic">Autónomo</button>
+        </div>
+        <svg viewBox="0 0 320 360" role="img" aria-label="Diagrama anatómico del cuerpo con nervios periféricos, plexos, cadena simpática y nervio vago">
+          <circle class="diagram-ink" cx="160" cy="30" r="20"/>
+          <path class="diagram-ink" fill="none" d="M126,64 C104,100 98,150 103,200 C105,216 112,226 122,232 L198,232 C208,226 215,216 217,200 C222,150 216,100 194,64"/>
+          <line class="diagram-ink-soft" x1="160" y1="52" x2="160" y2="228" stroke-dasharray="1 4"/>
+          <text class="leader-label" x="164" y="140">médula espinal (SNC)</text>
+          <path class="diagram-ink" fill="none" d="M126,232 C120,260 116,290 108,326 M198,232 C204,260 208,290 216,326"/>
+
+          <g class="layer-somatic">
+            <path class="diagram-ink-soft" stroke="var(--impulse)" fill="none" d="M160,88 C140,92 122,96 108,108 C95,118 85,140 78,165"/>
+            <path class="diagram-ink-soft" stroke="var(--impulse)" fill="none" d="M160,88 C180,92 198,96 212,108 C225,118 235,140 242,165"/>
+            <circle cx="108" cy="108" r="3.5" fill="var(--impulse)"/>
+            <circle cx="212" cy="108" r="3.5" fill="var(--impulse)"/>
+            <text class="leader-label" x="8" y="100">plexo braquial</text>
+            <path class="diagram-ink-soft" stroke="var(--impulse)" fill="none" d="M160,208 C148,212 138,218 130,232 C118,260 112,292 108,324"/>
+            <circle cx="130" cy="232" r="3.5" fill="var(--impulse)"/>
+            <text class="leader-label" x="55" y="340">nervio ciático</text>
+          </g>
+
+          <g class="layer-autonomic">
+            <line class="diagram-ink-soft" stroke="var(--synapse)" x1="140" y1="90" x2="140" y2="210"/>
+            <line class="diagram-ink-soft" stroke="var(--synapse)" x1="180" y1="90" x2="180" y2="210"/>
+            <circle cx="140" cy="105" r="3" fill="var(--synapse)"/>
+            <circle cx="140" cy="135" r="3" fill="var(--synapse)"/>
+            <circle cx="140" cy="165" r="3" fill="var(--synapse)"/>
+            <circle cx="140" cy="195" r="3" fill="var(--synapse)"/>
+            <circle cx="180" cy="105" r="3" fill="var(--synapse)"/>
+            <circle cx="180" cy="135" r="3" fill="var(--synapse)"/>
+            <circle cx="180" cy="165" r="3" fill="var(--synapse)"/>
+            <circle cx="180" cy="195" r="3" fill="var(--synapse)"/>
+            <text class="leader-label" x="200" y="215">cadena ganglionar simpática</text>
+            <path class="diagram-ink-soft" stroke="var(--synapse)" fill="none" d="M155,48 C130,80 128,120 145,180"/>
+            <text class="leader-label" x="20" y="60">nervio vago (parasimpático)</text>
+          </g>
+        </svg>
+        <div class="diagram-caption">Rama somática — plexo braquial y nervio ciático — y rama autónoma: cadena simpática y nervio vago</div>
+      </div>
+
+      <div class="quiz" id="quiz-snp">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- PLASTICIDAD -->
+    <section class="module" id="plasticidad">
+      <div class="module-eyebrow">Módulo 8</div>
+      <h2>Neuroplasticidad: un sistema que se reescribe</h2>
+      <div class="module-body">
+        <p>El sistema nervioso no es un cableado fijo. La <strong>neuroplasticidad</strong> es la capacidad del cerebro para modificar su estructura y su funcionamiento en respuesta a la experiencia, el aprendizaje o una lesión — fortaleciendo unas conexiones, debilitando otras y, en ciertas zonas, generando neuronas nuevas.</p>
+        <p>Se suelen distinguir dos tipos: la <strong>plasticidad funcional</strong>, cuando una tarea que hacía una zona dañada es asumida por otra región sana; y la <strong>plasticidad estructural</strong>, cambios físicos reales en las conexiones — nuevas dendritas, sinapsis reforzadas o, en regiones como el hipocampo, neuronas nuevas (neurogénesis).</p>
+      </div>
+
+      <div class="diagram-card">
+        <svg viewBox="0 0 520 190" role="img" aria-label="Comparación de una neurona antes y después de un periodo de aprendizaje intenso">
+          <text class="mono" x="70" y="24" font-size="12" fill="var(--ink-faint)">ANTES</text>
+          <ellipse class="node-fill" cx="110" cy="100" rx="26" ry="22"/>
+          <path class="diagram-ink-soft" fill="none" d="M84 85 C70 75,60 70,48 65 M84 95 C68 92,55 92,42 95 M84 110 C70 115,58 120,45 128 M92 118 C82 132,75 140,65 150"/>
+          <text class="mono" x="410" y="24" font-size="12" fill="var(--ink-faint)">DESPUÉS DE PRACTICAR</text>
+          <ellipse class="node-fill" cx="410" cy="100" rx="26" ry="22"/>
+          <path class="diagram-ink" fill="none" stroke-width="1.6" d="M384 82 C368 70,355 64,340 58 M384 88 C365 80,348 76,330 78 M384 96 C365 92,348 90,328 94 M384 106 C368 106,352 112,336 120 M390 116 C378 130,368 140,355 152 M396 118 C390 136,388 148,382 162"/>
+          <circle cx="340" cy="58" r="2.5" fill="var(--impulse)"/>
+          <circle cx="330" cy="78" r="2.5" fill="var(--impulse)"/>
+          <circle cx="328" cy="94" r="2.5" fill="var(--impulse)"/>
+          <circle cx="336" cy="120" r="2.5" fill="var(--impulse)"/>
+          <circle cx="355" cy="152" r="2.5" fill="var(--impulse)"/>
+          <circle cx="382" cy="162" r="2.5" fill="var(--impulse)"/>
+          <path class="diagram-ink-soft" d="M180 100 L 260 100" stroke-dasharray="4 5" marker-end="url(#arrow)"/>
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+            </marker>
+          </defs>
+          <text class="leader-label" x="180" y="130">la práctica repetida</text>
+          <text class="leader-label" x="185" y="148">ramifica más dendritas</text>
+        </svg>
+        <div class="diagram-caption">Más dendritas y más puntos de contacto sináptico tras el aprendizaje repetido</div>
+      </div>
+
+      <div class="expand">
+        <button class="expand-btn" type="button" aria-expanded="false">
+          <span>Una plasticidad de doble filo</span>
+          <span class="expand-tag">saber más</span>
+          <span class="expand-icon">+</span>
+        </button>
+        <div class="expand-panel">
+          <p>La neuroplasticidad no distingue entre hábitos "buenos" o "malos": simplemente refuerza aquello que se repite con frecuencia e intensidad emocional. Por eso permite dominar un instrumento musical o recuperar el habla tras un ictus, pero también puede consolidar patrones poco saludables, como la ansiedad o una adicción, si se repiten una y otra vez.</p>
+          <p>Es más intensa durante la infancia — cuando el cerebro forma y poda sinapsis a gran velocidad — pero nunca desaparece del todo. Factores como el sueño, el ejercicio físico y el aprendizaje activo favorecen la neuroplasticidad adaptativa a cualquier edad; la rehabilitación tras un daño cerebral (por ejemplo, después de un ictus) se apoya precisamente en estimularla, y suele ser más eficaz cuanto antes se inicia.</p>
+        </div>
+      </div>
+
+      <div class="quiz" id="quiz-plasticidad">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- REFLEJO -->
+    <section class="module" id="reflejo">
+      <div class="module-eyebrow">Módulo 9</div>
+      <h2>El arco reflejo</h2>
+      <div class="module-body">
+        <p>Un reflejo es una respuesta rápida e involuntaria que, en muchos casos, ni siquiera pasa por el cerebro — se resuelve en la médula espinal para ganar velocidad. Es el motivo por el que apartas la mano del fuego antes de "darte cuenta" conscientemente del dolor.</p>
+      </div>
+      <div class="diagram-card">
+        <svg viewBox="0 0 560 200" role="img" aria-label="Diagrama animado del arco reflejo">
+          <path id="reflexPath" class="diagram-ink" fill="none" d="M40 160 C 40 100, 40 60, 80 40 C 160 5, 280 5, 340 40 C 380 62, 400 100, 440 120 C 480 140, 500 150, 520 160"/>
+          <circle class="impulse-dot" r="7">
+            <animateMotion dur="3.4s" repeatCount="indefinite">
+              <mpath href="#reflexPath"/>
+            </animateMotion>
+          </circle>
+          <g class="mono" font-size="11" fill="var(--ink-soft)">
+            <text x="10" y="180">1. Estímulo</text>
+            <text x="60" y="30">2. Receptor</text>
+            <text x="180" y="20">3. Neurona sensitiva</text>
+            <text x="330" y="30">4. Médula espinal</text>
+            <text x="410" y="115">5. Neurona motora</text>
+            <text x="470" y="185">6. Efector</text>
+          </g>
+        </svg>
+        <div class="diagram-caption">El impulso recorre el arco reflejo sin esperar al cerebro</div>
+      </div>
+      <div class="quiz" id="quiz-reflejo">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- TRASTORNOS -->
+    <section class="module" id="trastornos">
+      <div class="module-eyebrow">Módulo 10</div>
+      <h2>Cuando algo falla: trastornos del sistema nervioso</h2>
+      <div class="module-body">
+        <p>Las enfermedades neurológicas son mucho más comunes de lo que se suele pensar: se calcula que afectan a más de una de cada tres personas en algún momento de su vida. Conocer los mecanismos básicos que viste en este cuaderno — neuronas, mielina, neurotransmisores, riego sanguíneo — ayuda a entender por qué fallos muy distintos producen síntomas tan diferentes.</p>
+      </div>
+
+      <div class="disease-grid">
+        <div class="disease-card">
+          <span class="disease-target">Sistema dopaminérgico</span>
+          <h4>Parkinson</h4>
+          <p>Degeneración progresiva de las neuronas que producen dopamina en una región llamada sustancia negra. Causa temblor, rigidez y lentitud de movimiento.</p>
+        </div>
+        <div class="disease-card">
+          <span class="disease-target">Memoria y corteza</span>
+          <h4>Alzheimer</h4>
+          <p>La causa más común de demencia. Se asocia a la acumulación de proteínas anómalas y a la pérdida progresiva de neuronas y de acetilcolina.</p>
+        </div>
+        <div class="disease-card">
+          <span class="disease-target">Mielina del SNC</span>
+          <h4>Esclerosis múltiple</h4>
+          <p>Enfermedad autoinmune: el propio sistema inmune ataca la mielina del SNC, lo que ralentiza o bloquea la conducción del impulso nervioso.</p>
+        </div>
+        <div class="disease-card">
+          <span class="disease-target">Neuronas motoras</span>
+          <h4>ELA</h4>
+          <p>Degeneración progresiva de las neuronas motoras que controlan el movimiento voluntario. La función cognitiva suele mantenerse intacta.</p>
+        </div>
+        <div class="disease-card">
+          <span class="disease-target">Actividad eléctrica</span>
+          <h4>Epilepsia</h4>
+          <p>Descargas eléctricas anormales y excesivas en grupos de neuronas, que pueden generar crisis convulsivas o alteraciones breves de la conciencia.</p>
+        </div>
+        <div class="disease-card">
+          <span class="disease-target">Riego sanguíneo</span>
+          <h4>Ictus (ACV)</h4>
+          <p>Interrupción del riego sanguíneo al encéfalo, por obstrucción o hemorragia, que priva de oxígeno a las neuronas de la zona afectada. Es una urgencia médica.</p>
+        </div>
+      </div>
+
+      <div class="expand">
+        <button class="expand-btn" type="button" aria-expanded="false">
+          <span>Un mismo mecanismo, enfermedades muy distintas</span>
+          <span class="expand-tag">saber más</span>
+          <span class="expand-icon">+</span>
+        </button>
+        <div class="expand-panel">
+          <p>Fíjate en un patrón: varios de estos trastornos son, en el fondo, el mismo tipo de daño ocurriendo en un lugar distinto. La pérdida de mielina que estudiaste en el módulo de células gliales es la base de la esclerosis múltiple (cuando ocurre en el SNC) y también del síndrome de Guillain-Barré, en el que el sistema inmune ataca la mielina de los nervios periféricos.</p>
+          <p>De forma parecida, "neurodegenerativo" no describe una sola enfermedad sino un mecanismo — la muerte progresiva y lenta de neuronas — que en la sustancia negra produce Parkinson, en el hipocampo y la corteza produce Alzheimer, y en las neuronas motoras produce ELA. Esto es información general de carácter educativo; ante cualquier síntoma neurológico, lo indicado es consultar a un profesional de la salud.</p>
+        </div>
+      </div>
+
+      <div class="quiz" id="quiz-trastornos">
+        <div class="quiz-label">Comprueba lo que entendiste</div>
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section class="module" id="final">
+      <div class="module-eyebrow">Cierre</div>
+      <h2>Evaluación final</h2>
+      <div class="module-body">
+        <p>Un repaso rápido de todo el cuaderno. Completa las preguntas para ver tu resultado.</p>
+      </div>
+      <div class="quiz" id="quiz-final">
+        <div class="quiz-label">Evaluación final</div>
+      </div>
+      <div id="finalResult" style="display:none;">
+        <div class="final-score" id="finalScoreText"></div>
+        <p class="module-body" id="finalMsg"></p>
+      </div>
+    </section>
+
+    <footer>
+      <span class="pill">Sin registro</span><span class="pill">Sin conexión requerida tras la descarga</span><span class="pill">Uso libre</span>
+      <p style="margin-top:18px;">Cuaderno de Campo · Curso abierto sobre el sistema nervioso humano</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+// ---------- QUIZ DATA ----------
+const quizData = {
+  intro: [
+    { q:"¿Cuáles son las dos partes principales del sistema nervioso?", opts:["Cerebro y corazón","Sistema Nervioso Central y Sistema Nervioso Periférico","Neuronas y músculos","Sangre y nervios"], correct:1 },
+    { q:"En términos generales, ¿qué tres pasos sigue el sistema nervioso ante un estímulo?", opts:["Ignorarlo, olvidarlo, repetirlo","Recoger información, interpretarla y generar una respuesta","Solo generar dolor","Bloquear el sistema inmune"], correct:1, diff:"aplicado" }
+  ],
+  neurona: [
+    { q:"¿Qué parte de la neurona recibe señales de otras neuronas?", opts:["El axón","Las dendritas","La mielina","El botón terminal"], correct:1 },
+    { q:"¿Qué función tiene la mielina en el axón?", opts:["Produce neurotransmisores","Almacena energía","Acelera la transmisión del impulso","Conecta con el soma"], correct:2 },
+    { q:"¿Por qué la conducción salta de un nodo de Ranvier a otro en un axón mielinizado?", opts:["Porque el impulso viaja más rápido saltando entre los tramos sin mielina en vez de recorrer el axón de forma continua","Porque la mielina genera electricidad propia","Porque evita que se liberen neurotransmisores","Porque reduce el número de dendritas"], correct:0, diff:"avanzado" }
+  ],
+  glia: [
+    { q:"¿Qué célula actúa como el sistema inmune del sistema nervioso central?", opts:["Astrocito","Microglía","Oligodendrocito","Célula de Schwann"], correct:1 },
+    { q:"¿Cuál es la diferencia clave entre un oligodendrocito y una célula de Schwann?", opts:["No hay diferencia, son sinónimos","El oligodendrocito puede mielinizar segmentos de 20 a 60 axones del SNC; la célula de Schwann mieliniza un único segmento de un axón del SNP","La célula de Schwann solo existe en el cerebro","El oligodendrocito no forma mielina"], correct:1, diff:"avanzado" }
+  ],
+  sinapsis: [
+    { q:"¿Qué se libera en el botón terminal para comunicarse con la siguiente neurona?", opts:["Iones de calcio únicamente","Neurotransmisores","Mielina","Glóbulos rojos"], correct:1 },
+    { q:"¿Las neuronas se tocan físicamente entre sí?", opts:["Sí, siempre","No, hay un espacio llamado hendidura sináptica","Solo en el cerebelo","Solo durante el sueño"], correct:1 },
+    { q:"Un fármaco que bloquea la recaptación de un neurotransmisor en la hendidura sináptica probablemente...", opts:["Lo elimina al instante","Prolonga su efecto en la hendidura sináptica","Impide que se libere","No tiene ningún efecto"], correct:1, diff:"aplicado" }
+  ],
+  neurotransmisores: [
+    { q:"¿Cuál es el principal neurotransmisor inhibidor del sistema nervioso central?", opts:["Glutamato","GABA","Dopamina","Acetilcolina"], correct:1 },
+    { q:"La degeneración de neuronas productoras de dopamina en la sustancia negra se asocia principalmente a...", opts:["La depresión","La enfermedad de Parkinson","La epilepsia","El síndrome de Guillain-Barré"], correct:1, diff:"avanzado" },
+    { q:"¿Qué tienen en común el glutamato y la acetilcolina en este contexto?", opts:["Ambos son inhibidores","Ambos actúan como neurotransmisores excitadores","Ninguno actúa en el SNC","Ambos son hormonas exclusivamente"], correct:1 }
+  ],
+  snc: [
+    { q:"¿Qué lóbulo procesa principalmente la información visual?", opts:["Frontal","Temporal","Occipital","Parietal"], correct:2 },
+    { q:"¿Qué estructura coordina el equilibrio y el movimiento fino?", opts:["Cerebelo","Lóbulo frontal","Tronco encefálico","Lóbulo parietal"], correct:0 },
+    { q:"¿En qué lóbulo se ubica típicamente el área de Wernicke, ligada a la comprensión del lenguaje?", opts:["Frontal","Parietal","Occipital","Temporal"], correct:3, diff:"avanzado" }
+  ],
+  snp: [
+    { q:"¿Qué rama del SNP controla el movimiento voluntario?", opts:["Autónoma","Somática","Simpática únicamente","Parasimpática únicamente"], correct:1 },
+    { q:"¿Qué rama autónoma prepara al cuerpo para 'lucha o huida'?", opts:["Parasimpática","Somática","Simpática","Sensitiva"], correct:2 },
+    { q:"El nervio vago es un ejemplo de fibra...", opts:["Somática","Simpática","Parasimpática","Exclusivamente sensitiva"], correct:2, diff:"avanzado" }
+  ],
+  plasticidad: [
+    { q:"¿Qué es la neuroplasticidad?", opts:["La capacidad del cerebro de generar dolor","La capacidad del sistema nervioso de reorganizar su estructura y función","La velocidad máxima de un impulso nervioso","La cantidad total de neuronas al nacer"], correct:1 },
+    { q:"¿Cuál es la diferencia entre plasticidad funcional y plasticidad estructural?", opts:["No hay diferencia entre ambas","La funcional traslada una tarea a otra región sana; la estructural implica cambios físicos reales en las conexiones","La funcional solo ocurre en la infancia","La estructural es exclusiva del sistema inmune"], correct:1, diff:"avanzado" }
+  ],
+  reflejo: [
+    { q:"¿Por qué los reflejos suelen ser tan rápidos?", opts:["Porque pasan primero por el cerebro","Porque a menudo se resuelven en la médula espinal","Porque no usan neuronas","Porque son conscientes"], correct:1 },
+    { q:"En un arco reflejo típico, ¿cuál es el orden correcto de la señal?", opts:["Efector, médula, receptor, neurona motora","Receptor → neurona sensitiva → médula espinal → neurona motora → efector","Encéfalo → médula → receptor → efector","Efector → receptor → encéfalo"], correct:1, diff:"aplicado" }
+  ],
+  trastornos: [
+    { q:"¿Qué caracteriza a la esclerosis múltiple?", opts:["La producción excesiva de dopamina","Un ataque autoinmune contra la mielina del SNC","La falta de riego sanguíneo cerebral","Una infección bacteriana de las neuronas"], correct:1 },
+    { q:"¿Qué tienen en común el Parkinson, el Alzheimer y la ELA?", opts:["Los tres son enfermedades infecciosas","Los tres son enfermedades neurodegenerativas: pérdida progresiva de neuronas en distintas regiones","Los tres afectan solo al sistema nervioso periférico","Los tres se curan con antibióticos"], correct:1, diff:"avanzado" }
+  ],
+  final: [
+    { q:"¿Qué es el sistema nervioso, en esencia?", opts:["Un sistema exclusivamente muscular","La red que recoge, interpreta y responde a información del entorno y del cuerpo","Un tipo de célula sanguínea","Un órgano único sin conexiones"], correct:1 },
+    { q:"El potencial de acción es una respuesta...", opts:["Graduada, según la intensidad del estímulo","De todo o nada","Producida solo por la glía","Exclusiva del cerebelo"], correct:1 },
+    { q:"¿Qué célula forma la mielina dentro del sistema nervioso central?", opts:["Astrocito","Oligodendrocito","Microglía","Célula de Schwann"], correct:1 },
+    { q:"¿Cómo cruza un neurotransmisor la hendidura sináptica?", opts:["Por difusión, tras liberarse desde vesículas","Por un cable eléctrico directo","No la cruza, salta por el aire","A través del líquido cefalorraquídeo"], correct:0 },
+    { q:"¿Qué neurotransmisor se asocia principalmente con la enfermedad de Parkinson?", opts:["Serotonina","Dopamina","GABA","Glutamato"], correct:1 },
+    { q:"¿Qué región del encéfalo regula funciones vitales como la respiración y el ritmo cardíaco?", opts:["Lóbulo occipital","Cerebelo","Tronco encefálico","Lóbulo parietal"], correct:2 },
+    { q:"¿Qué diferencia al sistema simpático del parasimpático?", opts:["El simpático activa 'lucha o huida'; el parasimpático favorece 'descanso y digestión'","Son exactamente lo mismo","El parasimpático solo existe en los brazos","El simpático forma parte del SNC, no del SNP"], correct:0 },
+    { q:"La neuroplasticidad estructural implica...", opts:["Cambios físicos reales en las conexiones neuronales","La muerte inmediata de todas las neuronas","Que el cerebro deja de cambiar tras la infancia","Un fenómeno exclusivo del sistema nervioso periférico"], correct:0 },
+    { q:"¿Por qué muchos reflejos no esperan la intervención consciente del cerebro?", opts:["Porque se resuelven en la médula espinal, ganando velocidad","Porque el cerebro está desconectado del cuerpo","Porque no intervienen neuronas motoras","Porque son movimientos voluntarios"], correct:0 },
+    { q:"La esclerosis múltiple y el síndrome de Guillain-Barré comparten, de fondo, qué mecanismo — aunque en distintas partes del sistema nervioso?", opts:["Ambas son infecciones virales","Un ataque autoinmune contra la mielina, en el SNC y en el SNP respectivamente","Una falta total de dopamina","Un tumor cerebral"], correct:1, diff:"avanzado" }
+  ]
+};
+
+const moduleIds = ["intro","neurona","glia","sinapsis","neurotransmisores","snc","snp","plasticidad","reflejo","trastornos","final"];
+const progress = JSON.parse(localStorage.getItem('neuroProgress') || '{}');
+
+function saveProgress(){ localStorage.setItem('neuroProgress', JSON.stringify(progress)); updateProgressUI(); }
+
+function renderQuiz(moduleId){
+  const container = document.getElementById('quiz-' + moduleId);
+  if(!container) return;
+  const questions = quizData[moduleId];
+  questions.forEach((item, qi) => {
+    const qWrap = document.createElement('div');
+    qWrap.className = 'quiz-q';
+    const p = document.createElement('p');
+    p.textContent = (qi+1) + '. ' + item.q;
+    if(item.diff){
+      const badge = document.createElement('span');
+      badge.className = 'diff-badge ' + item.diff;
+      badge.textContent = item.diff;
+      p.appendChild(badge);
+    }
+    qWrap.appendChild(p);
+    const optsWrap = document.createElement('div');
+    optsWrap.className = 'quiz-options';
+    item.opts.forEach((opt, oi) => {
+      const label = document.createElement('label');
+      label.className = 'quiz-opt';
+      label.innerHTML = '<input type="radio" name="'+moduleId+'-q'+qi+'" value="'+oi+'"> <span>'+opt+'</span>';
+      optsWrap.appendChild(label);
+    });
+    qWrap.appendChild(optsWrap);
+    container.appendChild(qWrap);
+  });
+  const btn = document.createElement('button');
+  btn.className = 'quiz-btn';
+  btn.textContent = moduleId === 'final' ? 'Ver resultado final' : 'Comprobar respuestas';
+  container.appendChild(btn);
+  const feedback = document.createElement('div');
+  feedback.className = 'quiz-feedback';
+  container.appendChild(feedback);
+
+  btn.addEventListener('click', () => {
+    let correctCount = 0;
+    questions.forEach((item, qi) => {
+      const selected = container.querySelector('input[name="'+moduleId+'-q'+qi+'"]:checked');
+      const optLabels = container.querySelectorAll('.quiz-q')[qi].querySelectorAll('.quiz-opt');
+      optLabels.forEach((lbl, oi) => {
+        lbl.classList.remove('correct','incorrect');
+        if(oi === item.correct) lbl.classList.add('correct');
+        else if(selected && parseInt(selected.value) === oi) lbl.classList.add('incorrect');
+      });
+      if(selected && parseInt(selected.value) === item.correct) correctCount++;
+    });
+    if(moduleId === 'final'){
+      const pct = Math.round((correctCount/questions.length)*100);
+      document.getElementById('finalResult').style.display = 'block';
+      document.getElementById('finalScoreText').textContent = correctCount + ' / ' + questions.length + ' (' + pct + '%)';
+      let msg = pct === 100 ? '¡Dominaste el cuaderno completo!' : pct >= 50 ? 'Buen trabajo — revisa los módulos donde fallaste para reforzar.' : 'Vale la pena repasar los módulos anteriores antes de seguir.';
+      document.getElementById('finalMsg').textContent = msg;
+      feedback.textContent = '';
+    } else {
+      feedback.textContent = correctCount === questions.length ? 'Correcto — dominaste este módulo.' : correctCount + ' de ' + questions.length + ' correctas. Puedes revisar el texto y reintentar.';
+      feedback.className = 'quiz-feedback ' + (correctCount === questions.length ? 'correct' : 'incorrect');
+    }
+    if(correctCount === questions.length){
+      progress[moduleId] = true;
+      saveProgress();
+    }
+  });
+}
+
+moduleIds.forEach(renderQuiz);
+
+function updateProgressUI(){
+  let done = 0;
+  moduleIds.forEach(id => {
+    const check = document.querySelector('.toc-check[data-check="'+id+'"]');
+    if(progress[id]){ check.classList.add('done'); check.textContent = '✓'; done++; }
+  });
+  document.getElementById('progressbar').style.width = Math.round((done/moduleIds.length)*100) + '%';
+}
+updateProgressUI();
+
+// ---------- NAV ACTIVE STATE ----------
+const navLinks = document.querySelectorAll('.toc-list a');
+const sections = moduleIds.map(id => document.getElementById(id));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector('.toc-list a[data-section="'+entry.target.id+'"]');
+      if(link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-40% 0px -50% 0px' });
+sections.forEach(s => s && navObserver.observe(s));
+
+// ---------- ACTION POTENTIAL DRAW-IN ANIMATION ----------
+const apPath = document.getElementById('apPath');
+const apObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      apPath.style.transition = 'stroke-dashoffset 2s ease';
+      apPath.style.strokeDashoffset = '0';
+    } else {
+      apPath.style.transition = 'none';
+      apPath.style.strokeDashoffset = '1';
+    }
+  });
+}, { threshold: 0.4 });
+apObserver.observe(document.getElementById('apGraph'));
+
+// ---------- BRAIN REGIONS ----------
+const regions = document.querySelectorAll('.region');
+const brainPanel = document.getElementById('brainPanel');
+regions.forEach(r => {
+  r.addEventListener('click', () => {
+    regions.forEach(x => x.classList.remove('active'));
+    r.classList.add('active');
+    brainPanel.innerHTML = '<b>' + r.dataset.label + ':</b> ' + r.dataset.desc;
+  });
+});
+
+// ---------- SNP LAYER TOGGLES ----------
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('on');
+    const layer = document.querySelector('.layer-' + btn.dataset.layer);
+    layer.style.display = btn.classList.contains('on') ? '' : 'none';
+  });
+});
+
+// ---------- EXPANDABLE / DETACHABLE CARDS ----------
+document.querySelectorAll('.expand-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('.expand');
+    const isOpen = card.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    const icon = btn.querySelector('.expand-icon');
+    if(icon) icon.textContent = isOpen ? '×' : '+';
+  });
+});
+</script>
+<!-- ═══════════ ASISTENTE IA FLOTANTE ═══════════ -->
+<button id="aiFab" aria-label="Abrir asistente" title="Asistente del curso">
+  <span class="pulse"></span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round">
+    <circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="7" r="2.4"/>
+    <circle cx="12" cy="16" r="2.6"/>
+    <path d="M8.9 8.6 10.4 14M15.1 8.6 13.6 14M9 7h6"/>
+  </svg>
+</button>
+
+<div id="aiPanel">
+  <div class="ai-head">
+    <div>
+      <div class="ai-head-title">🧠 Asistente del curso</div>
+      <div class="ai-head-sub" id="aiHeadSub">configuración</div>
+    </div>
+    <div class="ai-head-btns">
+      <button class="ai-icon-btn" id="aiSettingsBtn" title="Configuración" style="display:none;">⚙</button>
+      <button class="ai-icon-btn" id="aiCloseBtn" title="Cerrar">×</button>
+    </div>
+  </div>
+
+  <div class="ai-body">
+    <!-- Vista de configuración -->
+    <div class="ai-setup" id="aiSetupView">
+      <p>Este asistente usa <b>tu propia cuenta de Ollama Cloud</b> — es gratis crearla y tiene modelos sin costo disponibles. Tu API key se guarda solo en este navegador, nunca se sube a GitHub.</p>
+      <div class="ai-field">
+        <label for="aiKeyInput">API Key de Ollama Cloud</label>
+        <input type="password" id="aiKeyInput" placeholder="pega tu key acá" autocomplete="off">
+      </div>
+      <button class="ai-btn" id="aiConnectBtn">Conectar y ver modelos</button>
+      <div class="ai-error" id="aiError"></div>
+      <p class="ai-hint">¿No tenés una key? Creála gratis en <a href="https://ollama.com/settings/keys" target="_blank" rel="noopener">ollama.com/settings/keys</a></p>
+
+      <div id="aiModelPicker" style="display:none; margin-top:16px;">
+        <div class="ai-field">
+          <label for="aiModelSelect">Elegí un modelo</label>
+          <select id="aiModelSelect"></select>
+        </div>
+        <button class="ai-btn" id="aiStartBtn">Empezar a chatear</button>
+        <button class="ai-btn ai-btn-secondary" id="aiForgetBtnSetup" style="margin-top:10px;">olvidar API key guardada</button>
+      </div>
+    </div>
+
+    <!-- Vista de chat -->
+    <div class="ai-chat" id="aiChatView">
+      <div class="ai-msgs" id="aiMsgs"></div>
+    </div>
+  </div>
+
+  <div class="ai-inputrow" id="aiInputRow" style="display:none;">
+    <input type="text" id="aiInput" placeholder="Preguntale al asistente...">
+    <button id="aiSendBtn">➤</button>
+  </div>
+  <div class="ai-footer" id="aiFooter" style="display:none;">
+    <span id="aiModelLabel"></span>
+    <button id="aiForgetBtn">olvidar API key</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// ASISTENTE IA FLOTANTE — Ollama Cloud (API compatible con OpenAI)
+// ═══════════════════════════════════════════════════════════════
+(function(){
+  const OLLAMA_BASE = "https://ollama.com/v1";
+  const LS_KEY   = "nervioCourse_ollamaKey";
+  const LS_MODEL = "nervioCourse_ollamaModel";
+  const LS_HIST  = "nervioCourse_chatHistory";
+  const MAX_HISTORY_TURNS = 12;
+
+  const fab        = document.getElementById('aiFab');
+  const panel       = document.getElementById('aiPanel');
+  const closeBtn    = document.getElementById('aiCloseBtn');
+  const settingsBtn = document.getElementById('aiSettingsBtn');
+  const headSub     = document.getElementById('aiHeadSub');
+
+  const setupView   = document.getElementById('aiSetupView');
+  const keyInput    = document.getElementById('aiKeyInput');
+  const connectBtn  = document.getElementById('aiConnectBtn');
+  const errorBox    = document.getElementById('aiError');
+  const modelPicker = document.getElementById('aiModelPicker');
+  const modelSelect = document.getElementById('aiModelSelect');
+  const startBtn    = document.getElementById('aiStartBtn');
+
+  const chatView   = document.getElementById('aiChatView');
+  const msgsBox    = document.getElementById('aiMsgs');
+  const inputRow   = document.getElementById('aiInputRow');
+  const chatInput  = document.getElementById('aiInput');
+  const sendBtn    = document.getElementById('aiSendBtn');
+  const footer     = document.getElementById('aiFooter');
+  const modelLabel = document.getElementById('aiModelLabel');
+  const forgetBtn  = document.getElementById('aiForgetBtn');
+
+  let apiKey = localStorage.getItem(LS_KEY) || "";
+  let model  = localStorage.getItem(LS_MODEL) || "";
+  let history = [];
+  try { history = JSON.parse(localStorage.getItem(LS_HIST) || "[]"); } catch(e) { history = []; }
+
+  function showError(msg){
+    errorBox.textContent = msg;
+    errorBox.classList.add('show');
+  }
+  function hideError(){ errorBox.classList.remove('show'); }
+
+  function togglePanel(){
+    panel.classList.toggle('open');
+    if(panel.classList.contains('open') && apiKey && model){
+      renderHistory();
+      chatInput.focus();
+    }
+  }
+  fab.addEventListener('click', togglePanel);
+  closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+
+  function goToSetup(){
+    setupView.style.display = 'block';
+    chatView.classList.remove('active');
+    inputRow.style.display = 'none';
+    footer.style.display = 'none';
+    settingsBtn.style.display = 'none';
+    headSub.textContent = 'configuración';
+    modelPicker.style.display = apiKey ? 'block' : 'none';
+  }
+
+  function goToChat(){
+    setupView.style.display = 'none';
+    chatView.classList.add('active');
+    inputRow.style.display = 'flex';
+    footer.style.display = 'flex';
+    settingsBtn.style.display = 'flex';
+    headSub.textContent = 'listo para ayudarte';
+    modelLabel.textContent = model;
+  }
+
+  settingsBtn.addEventListener('click', () => { hideError(); populateModelsIfPossible(); goToSetup(); });
+
+  // ── Conectar: valida la key trayendo la lista real de modelos ──────────
+  async function fetchModels(key){
+    const res = await fetch(`${OLLAMA_BASE}/models`, {
+      headers: { "Authorization": `Bearer ${key}` }
+    });
+    if(!res.ok){
+      if(res.status === 401) throw new Error("API key inválida o vencida. Verificala en ollama.com/settings/keys");
+      throw new Error(`Ollama Cloud respondió con error ${res.status}`);
+    }
+    const data = await res.json();
+    return (data.data || []).map(m => m.id);
+  }
+
+  function fillModelSelect(models){
+    modelSelect.innerHTML = "";
+    models.forEach(id => {
+      const opt = document.createElement('option');
+      opt.value = id; opt.textContent = id;
+      if(id === model) opt.selected = true;
+      modelSelect.appendChild(opt);
+    });
+    modelPicker.style.display = 'block';
+  }
+
+  async function populateModelsIfPossible(){
+    if(!apiKey) return;
+    try{ fillModelSelect(await fetchModels(apiKey)); }catch(e){ /* silencioso acá, se re-muestra al conectar */ }
+  }
+
+  connectBtn.addEventListener('click', async () => {
+    hideError();
+    const key = keyInput.value.trim();
+    if(!key){ showError("Pegá tu API key primero."); return; }
+    connectBtn.disabled = true;
+    connectBtn.textContent = "Conectando...";
+    try{
+      const models = await fetchModels(key);
+      if(models.length === 0){ showError("La key es válida pero no trajo modelos disponibles."); }
+      else{
+        apiKey = key;
+        localStorage.setItem(LS_KEY, apiKey);
+        fillModelSelect(models);
+      }
+    }catch(e){
+      // fetch tira TypeError genérico cuando el navegador bloquea por CORS o no hay red
+      if(e instanceof TypeError){
+        showError("No se pudo conectar con Ollama Cloud (puede ser un bloqueo CORS del navegador o falta de conexión). Probá de nuevo o avisale a quien armó el curso.");
+      } else {
+        showError(e.message);
+      }
+    }
+    connectBtn.disabled = false;
+    connectBtn.textContent = "Conectar y ver modelos";
+  });
+
+  startBtn.addEventListener('click', () => {
+    model = modelSelect.value;
+    if(!model){ showError("Elegí un modelo de la lista."); return; }
+    localStorage.setItem(LS_MODEL, model);
+    goToChat();
+  });
+
+  function forgetKey(){
+    if(!confirm("¿Olvidar tu API key guardada en este navegador?")) return;
+    apiKey = ""; model = ""; history = [];
+    localStorage.removeItem(LS_KEY);
+    localStorage.removeItem(LS_MODEL);
+    localStorage.removeItem(LS_HIST);
+    keyInput.value = "";
+    modelPicker.style.display = 'none';
+    msgsBox.innerHTML = "";
+    goToSetup();
+  }
+  document.getElementById('aiForgetBtn').addEventListener('click', forgetKey);
+  document.getElementById('aiForgetBtnSetup').addEventListener('click', forgetKey);
+
+  // ── Chat ─────────────────────────────────────────────────────────────
+  function addBubble(role, text, isThinking){
+    const div = document.createElement('div');
+    div.className = 'ai-msg ' + (role === 'user' ? 'user' : 'bot') + (isThinking ? ' thinking' : '');
+    div.textContent = text;
+    msgsBox.appendChild(div);
+    msgsBox.scrollTop = msgsBox.scrollHeight;
+    return div;
+  }
+
+  function renderHistory(){
+    msgsBox.innerHTML = "";
+    if(history.length === 0){
+      addBubble('bot', '¡Hola! Soy tu asistente experto en el sistema nervioso. Preguntame lo que no te quede claro del curso.');
+    } else {
+      history.forEach(m => addBubble(m.role === 'user' ? 'user' : 'bot', m.content));
+    }
+    goToChat();
+  }
+
+  function currentSectionLabel(){
+    const active = document.querySelector('.toc-list a.active');
+    return active ? active.textContent.trim() : "desconocida";
+  }
+
+  async function sendMessage(){
+    const text = chatInput.value.trim();
+    if(!text || !apiKey || !model) return;
+    chatInput.value = "";
+    sendBtn.disabled = true;
+    addBubble('user', text);
+    history.push({ role: 'user', content: text });
+
+    const thinkingBubble = addBubble('bot', 'Pensando...', true);
+
+    const systemPrompt = `Sos un asistente experto y didáctico especializado ÚNICAMENTE en el sistema nervioso humano (neuronas, glía, sinapsis, neurotransmisores, SNC, SNP, reflejos, plasticidad y trastornos neurológicos), integrado en un curso interactivo online.
+Reglas:
+- Explicá con claridad, ejemplos concretos y analogías simples, adaptándote al nivel de quien pregunta.
+- Si preguntan por un tema del cuestionario, ayudá a ENTENDER el concepto en vez de dar la respuesta literal de una — fomentá que vuelvan a leer esa sección con más atención.
+- Si preguntan algo totalmente ajeno al sistema nervioso o a biología/neurociencia, redirigí amablemente el tema del curso.
+- Sé breve (3-6 líneas) salvo que pidan explícitamente más detalle.
+- La sección del curso donde está ahora la persona es: "${currentSectionLabel()}".`;
+
+    const messages = [
+      { role: "system", content: systemPrompt },
+      ...history.slice(-MAX_HISTORY_TURNS)
+    ];
+
+    try{
+      const res = await fetch(`${OLLAMA_BASE}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({ model, messages, stream: false })
+      });
+      if(!res.ok) throw new Error(`Error ${res.status} al consultar el modelo.`);
+      const data = await res.json();
+      const reply = data.choices?.[0]?.message?.content || "(sin respuesta)";
+      thinkingBubble.remove();
+      addBubble('bot', reply);
+      history.push({ role: 'assistant', content: reply });
+      localStorage.setItem(LS_HIST, JSON.stringify(history.slice(-40)));
+    }catch(e){
+      thinkingBubble.remove();
+      const msg = (e instanceof TypeError)
+        ? "No se pudo conectar con Ollama Cloud ahora mismo."
+        : e.message;
+      addBubble('bot', "⚠️ " + msg);
+    }
+    sendBtn.disabled = false;
+  }
+  sendBtn.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
+
+  // ── Estado inicial ───────────────────────────────────────────────────
+  if(apiKey && model){
+    goToChat();
+    renderHistory();
+  } else {
+    goToSetup();
+  }
+})();
+</script>
+
+</body>
+</html>
