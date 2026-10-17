@@ -5,3 +5,7 @@
 .env*
 *.secret
 secrets/
+
+# Backups locales
+*.bak
+*.bak_*
