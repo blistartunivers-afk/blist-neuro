@@ -1,0 +1,21 @@
+# CODEOWNERS - blist-neuro
+# Estos usuarios son solicitados automaticamente como reviewers.
+# El orden importa: el ultimo match gana.
+# Sintaxis: <patron>  @usuario
+
+# Global - todo requiere aprobacion del owner
+*  @blistartunivers-afk
+
+# Archivos criticos de seguridad
+.github/workflows/  @blistartunivers-afk
+.github/dependabot.yml  @blistartunivers-afk
+SECURITY.md  @blistartunivers-afk
+CODEOWNERS  @blistartunivers-afk
+
+# Documentacion
+docs/  @blistartunivers-afk
+README.md  @blistartunivers-afk
+
+# Scripts y automatizacion
+scripts/  @blistartunivers-afk
+*.sh  @blistartunivers-afk
