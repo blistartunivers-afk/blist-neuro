@@ -1,5 +1,7 @@
 # OpenSSF Scorecard - Security posture analysis
-# Runs weekly and on PR changes to .github/workflows
+# Runs weekly, on push to workflow changes, and on ALL pull requests
+# (pull_request runs on all PRs because 'Scorecard' is a required status check;
+#  a path filter here would leave the check pending forever and block merges)
 name: "Scorecard"
 on:
   schedule:
@@ -9,8 +11,6 @@ on:
     paths:
       - '.github/workflows/**'
   pull_request:
-    paths:
-      - '.github/workflows/**'
 permissions:
   contents: read
   security-events: write
