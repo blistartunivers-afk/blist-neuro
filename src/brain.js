@@ -40,6 +40,7 @@ export class Brain {
     this.I_NMDA = new Float32Array(this.N);
     this.I_GABA = new Float32Array(this.N);
     this.x_std = new Float32Array(this.N);
+    this.I_kick = new Float32Array(this.N); // kick Poisson espontaneo (anti estado-absorbente)
     
     // Izhikevich Parameters
     this.a = new Float32Array(this.N);
@@ -156,7 +157,16 @@ export class Brain {
       // v += dt * (0.04*v^2 + 5*v + 140 - u + I_syn + I_ext)
       for (let i = 0; i < N; i++) {
         const I_syn = this.I_AMPA[i] + this.I_NMDA[i] + this.I_GABA[i];
-        const I_ext = (i < N_exc) ? I_ext_exc * (Math.random() * 2 - 1) : I_ext_inh * (Math.random() * 2 - 1);
+        // Kick Poisson espontaneo (~2 Hz): re-ignicion anti estado-absorbente
+        if (Math.random() < 0.002) this.I_kick[i] = 15.0;
+        const kick = this.I_kick[i];
+        this.I_kick[i] *= 0.9; // decaimiento rapido del kick
+        // Ruido gaussiano (Box-Muller) con varianza suficiente para fluctuaciones supra-umbral ocasionales
+        const g1 = Math.random(), g2 = Math.random();
+        const gauss = Math.sqrt(-2.0 * Math.log(g1 + 1e-10)) * Math.cos(6.283185307179586 * g2);
+        const I_ext = (i < N_exc)
+          ? I_ext_exc * Math.random() + kick + gauss * 1.2
+          : I_ext_inh * Math.random() + kick + gauss * 0.9;
         // Noise scaled by sqrt(dt) for Euler-Maruyama correctness, but kept simple here
         this.v[i] += dt * (0.04 * this.v[i] * this.v[i] + 5.0 * this.v[i] + 140.0 - this.u[i] + I_syn + I_ext);
         this.u[i] += dt * this.a[i] * (this.b[i] * this.v[i] - this.u[i]);
@@ -180,6 +190,7 @@ export class Brain {
         // 3. Synaptic Current Updates (Vectorized Dot Product: S^T * spike_vector)
         // We compute input current for ALL neurons from fired neurons
         // inc[post] += S[post][pre] * x_std[pre] for pre in fired
+        const S = this.S; // fix: alias local, S no estaba definido (crasheaba al primer spike)
         
         // Excitatory Contribution
         for (const pre of fired) {
@@ -221,7 +232,11 @@ export class Brain {
     } // End sub-steps
 
     // 5. Homeostatic STDP (Slow, once per ms)
-    this._homeostaticSTDP();
+    // Homeostatic STDP: submuestreo cada 100 ms (biologicamente opera en minutos/horas)
+    // Reduce overhead de 1.6M accesos/ms a ~16K accesos/ms promedio
+    if (this.t % 100 === 0) {
+      this._homeostaticSTDP();
+    }
 
     // 6. Metrics
     this.t += 1;
