@@ -4,7 +4,7 @@
 
 **Cuaderno de Campo · El Sistema Nervioso**
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen?style=flat-square&logo=github)](https://blistartunivers-afk.github.io/blist-neuro/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen?style=flat-square&logo=github)](https://blistartunivers-afk.github.io/blist-neuro/docs/course/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Stack: Vanilla JS](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20JS-yellow?style=flat-square&logo=javascript)](https://developer.mozilla.org/)
 
@@ -46,7 +46,7 @@ cd blist-neuro
 python3 -m http.server 8000
 ```
 
-Luego abre tu navegador en: `http://localhost:8000`
+Luego abre tu navegador en: `http://localhost:8000/docs/course/`
 
 ---
 
