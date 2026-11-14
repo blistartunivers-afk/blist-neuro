@@ -1,46 +1,71 @@
-# blist-neuro
+<div align="center">
+
+# 🧠 BLIST-NEURO
 
 **Cuaderno de Campo · El Sistema Nervioso**
 
-Curso interactivo y gratuito sobre el sistema nervioso humano — 11 módulos, diagramas SVG animados, cuestionarios con niveles de dificultad, progreso guardado en el navegador, y un asistente IA personal integrado para resolver dudas mientras estudiás.
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen?style=flat-square&logo=github)](https://blistartunivers-afk.github.io/blist-neuro/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Stack: Vanilla JS](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20JS-yellow?style=flat-square&logo=javascript)](https://developer.mozilla.org/)
 
-🔗 **En vivo:** https://blistartunivers-afk.github.io/blist-neuro/
+*Curso interactivo y gratuito sobre el sistema nervioso humano — 11 módulos, diagramas SVG animados, cuestionarios interactivos y asistente IA integrado.*
 
-## ✨ Qué tiene
-
-- **11 módulos**: introducción, neurona, glía, sinapsis, neurotransmisores, SNC, SNP, plasticidad, arco reflejo, trastornos, evaluación final.
-- **Diagramas SVG animados** — potencial de acción dibujándose en vivo, regiones del encéfalo interactivas, capas del SNP activables por botón.
-- **Cuestionarios por módulo** con preguntas marcadas por dificultad (`aplicado`, `avanzado`) y feedback inmediato, más un examen final que combina todo el temario.
-- **Progreso persistente** vía `localStorage` — no requiere cuenta ni backend.
-- **Asistente IA flotante** (🧠 abajo a la derecha): el usuario conecta su propia API key gratuita de [Ollama Cloud](https://ollama.com/settings/keys), elige un modelo, y chatea con un asistente experto *solo* en sistema nervioso. La key vive únicamente en el navegador del usuario — nunca se sube al repo ni pasa por ningún servidor propio.
-
-## 🛠️ Stack
-
-Un solo archivo (`index.html`) — HTML + CSS + JS vanilla, sin build, sin dependencias externas más que Google Fonts y la API de Ollama Cloud (llamada directo desde el navegador del usuario). Pensado para servirse como página estática desde GitHub Pages.
-
-## 🚀 Desarrollo
-
-Como es un único archivo estático, para editarlo alcanza con abrir `index.html` y modificarlo directamente. Para probar el asistente IA en local hace falta servirlo por `http`/`https` real:
-
-```bash
-python3 -m http.server 8000
-```
-
-Luego entra a `http://localhost:8000`. Abrirlo como `file://` puede bloquear las llamadas a la API de Ollama Cloud por política de origen.
-
-## ✅ Roadmap
-
-- [x] Asistente IA flotante con Ollama Cloud
-- [x] Deploy en GitHub Pages (COMPLETADO - Agosto 2026)
-- [ ] Completar todos los módulos con contenido
-- [ ] Visualizaciones 2D/3D (Three.js) para neurona y sinapsis
-- [ ] Quiz completos y sistema de puntuación avanzado
-- [ ] Más actividades interactivas desplegables por módulo
-
-## 📝 Créditos
-
-Curso creado por **Estiven (Blist)**, parte del ecosistema **BLIST**.
+</div>
 
 ---
 
-**Estado:** ✅ En vivo y funcionando | Última actualización: Agosto 2026
+## ✨ Características Principales
+
+- **📚 11 Módulos Especializados**: Introducción, neurona, glía, sinapsis, neurotransmisores, SNC, SNP, plasticidad, arco reflejo, trastornos y evaluación final.
+- **🎨 Diagramas SVG Animados**: Potencial de acción en tiempo real, regiones del encéfalo interactivas y capas del SNP activables por componentes.
+- **📝 Evaluaciones Dinámicas**: Cuestionarios por módulo con marcas de dificultad (`aplicado`, `avanzado`), retroalimentación instantánea y examen final integrativo.
+- **💾 Persistencia Local**: Progreso guardado automáticamente mediante `localStorage` (sin necesidad de cuentas ni servidores backend).
+- **🤖 Asistente IA Integrado**: Asistente inteligente flotante conectable mediante API key de Ollama Cloud para tutorías personalizadas en tiempo real.
+
+---
+
+## 🛠️ Stack Tecnológico
+
+Proyecto diseñado bajo arquitectura monolítica ligera de alto rendimiento:
+- **Frontend**: HTML5, CSS3 y JavaScript (ES6+ sin dependencias de frameworks externos).
+- **Tipografía**: Google Fonts (Inter / Fira Code).
+- **IA**: Ollama Cloud API (integración nativa desde el navegador).
+
+---
+
+## 🚀 Puesta en Marcha (Desarrollo Local)
+
+Dado que es una aplicación web estática autocontenido, puedes servirla localmente usando cualquier servidor HTTP para evitar restricciones de políticas de origen (`CORS`) con la API de Ollama:
+
+```bash
+# Clonar el repositorio
+git clone https://github.com/blistartunivers-afk/blist-neuro.git
+cd blist-neuro
+
+# Levantar servidor local (Python 3)
+python3 -m http.server 8000
+```
+
+Luego abre tu navegador en: `http://localhost:8000`
+
+---
+
+## 🗺️ Roadmap
+
+- [x] Asistente IA flotante con soporte para Ollama Cloud
+- [x] Despliegue oficial en GitHub Pages
+- [ ] Ampliación de contenido para los 11 módulos principales
+- [ ] Visualizaciones avanzadas 2D/3D (Three.js) para neuronas y sinapsis
+- [ ] Sistema de puntuación y analíticas de progreso avanzadas
+- [ ] Módulos interactivos desplegables adicionales
+
+---
+
+## 📄 Créditos y Licencia
+
+Creado con pasión por **Estiven (Blist)** como parte del ecosistema educativo **BLIST**.
+
+Distribuido bajo la licencia **MIT**. Consulta el archivo `LICENSE` para más detalles.
+
+---
+**Estado:** 🟢 Activo y en producción | *Ecosistema BLIST · 2026*
