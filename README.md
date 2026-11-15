@@ -14,19 +14,30 @@ Curso interactivo y gratuito sobre el sistema nervioso humano — 11 módulos, d
 - **Progreso persistente** vía `localStorage` — no requiere cuenta ni backend.
 - **Asistente IA flotante** (🧠 abajo a la derecha): el usuario conecta su propia API key gratuita de [Ollama Cloud](https://ollama.com/settings/keys), elige un modelo, y chatea con un asistente experto *solo* en sistema nervioso. La key vive únicamente en el navegador del usuario — nunca se sube al repo ni pasa por ningún servidor propio.
 
-## 🛠️ Stack
+## 🛠️ Estructura
 
-Un solo archivo (`index.html`) — HTML + CSS + JS vanilla, sin build, sin dependencias externas más que Google Fonts y la API de Ollama Cloud (llamada directo desde el navegador del usuario). Pensado para servirse como página estática desde GitHub Pages.
+- `docs/course/index.html`: curso estático en HTML, CSS y JavaScript, publicado con GitHub Pages.
+- `src/brain.js`: simulación experimental de una red de neuronas Izhikevich.
+- `src/worker.js`: ejecuta la simulación en un Web Worker, fuera del hilo de la interfaz.
+- `tests/worker.test.mjs`: pruebas aisladas del worker y del estado neuronal.
+
+El curso y la simulación son componentes separados: la página del curso todavía no carga `src/worker.js`. El asistente del curso llama a Ollama Cloud desde el navegador cuando el usuario configura su clave.
 
 ## 🚀 Desarrollo
 
-Como es un único archivo estático, para editarlo alcanza con abrir `index.html` y modificarlo directamente. Para probar el asistente IA en local hace falta servirlo por `http`/`https` real:
+Para probar el curso y el asistente IA en local, sirve el repositorio por HTTP:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Luego entra a `http://localhost:8000`. Abrirlo como `file://` puede bloquear las llamadas a la API de Ollama Cloud por política de origen.
+Luego entra a `http://localhost:8000/docs/course/`. Abrirlo como `file://` puede bloquear las llamadas a la API de Ollama Cloud por política de origen.
+
+Para comprobar el código del simulador se necesita Node.js:
+
+```bash
+node --test tests/worker.test.mjs
+```
 
 ## ✅ Roadmap
 
