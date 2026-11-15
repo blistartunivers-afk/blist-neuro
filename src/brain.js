@@ -117,6 +117,7 @@ export class Brain {
     this.I_NMDA.fill(0.0);
     this.I_GABA.fill(0.0);
     this.x_std.fill(1.0);
+    this.I_kick.fill(0.0);
     this.t = 0;
     this.rateHistory = [];
     this.spikeBuffer = [];
@@ -325,7 +326,7 @@ export class Brain {
   }
 
   getSpikeBuffer() {
-    return new Uint16Array(this.spikeBuffer);
+    return new Float64Array(this.spikeBuffer);
   }
 
   getRateHistory() {

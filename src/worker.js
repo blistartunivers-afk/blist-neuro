@@ -6,7 +6,8 @@ import { Brain } from './brain.js';
 
 let brain = null;
 let running = false;
-let animationFrameId = null;
+let timer = null;
+let stimOverride = null;
 
 // Config
 const BATCH_MS = 50; // Send UI update every 50ms (20 FPS)
@@ -17,6 +18,9 @@ self.onmessage = async (e) => {
   
   switch (type) {
     case 'init': {
+      running = false;
+      clearTimeout(timer);
+      stimOverride = null;
       const config = payload || {};
       brain = new Brain(config);
       // Try load saved state from IndexedDB (via main thread)
@@ -34,13 +38,14 @@ self.onmessage = async (e) => {
     
     case 'pause': {
       running = false;
+      clearTimeout(timer);
       break;
     }
     
     case 'step': {
       // Single step (debug)
       if (!brain) break;
-      const result = brain.step(payload?.stimOverride);
+      const result = brain.step({ stimOverride: payload?.stimOverride || stimOverride });
       self.postMessage({ type: 'batch', payload: formatBatch(result) }, [result.spikes.buffer]);
       break;
     }
@@ -49,6 +54,7 @@ self.onmessage = async (e) => {
       if (!brain) break;
       // Return stim override object for next steps
       const stim = brain.injectStimulus(payload.exc, payload.inh, payload.duration);
+      stimOverride = stim;
       self.postMessage({ type: 'stimInjected', payload: stim });
       break;
     }
@@ -56,11 +62,8 @@ self.onmessage = async (e) => {
     case 'getState': {
       if (!brain) break;
       const state = brain.getState();
-      // Transfer large arrays
-      self.postMessage({ type: 'state', payload: state }, [
-        state.S.buffer, state.x_std.buffer, state.v.buffer, state.u.buffer,
-        state.I_NMDA.buffer, state.I_AMPA.buffer, state.I_GABA.buffer
-      ]);
+      // getState() returns ordinary arrays; structured clone preserves them.
+      self.postMessage({ type: 'state', payload: state });
       break;
     }
     
@@ -73,6 +76,7 @@ self.onmessage = async (e) => {
     
     case 'reset': {
       if (!brain) break;
+      stimOverride = null;
       brain._resetState();
       self.postMessage({ type: 'resetDone', payload: { t: 0 } });
       break;
@@ -89,37 +93,28 @@ function formatBatch(result) {
   };
 }
 
-async function simulationLoop() {
+function simulationLoop() {
   if (!running || !brain) return;
-  
-  let stimOverride = null;
-  
-  while (running) {
-    const batchStart = performance.now();
-    let lastResult = null;
-    
-    // Run BATCH_MS steps
+  const batchStart = performance.now();
+  let lastResult = null;
+  const spikes = [];
+  try {
     for (let i = 0; i < STEPS_PER_BATCH; i++) {
       lastResult = brain.step(stimOverride ? { stimOverride } : {});
-      if (stimOverride) stimOverride = lastResult.stimOverride; // Not returned, handled internally
+      spikes.push(...lastResult.spikes);
+      if (stimOverride && stimOverride.durationRemaining <= 0) stimOverride = null;
     }
-    
-    // Send batch to main thread
     if (lastResult) {
-      // Transfer spike buffer ownership
+      lastResult.spikes = new Uint16Array(spikes);
       self.postMessage({ type: 'batch', payload: formatBatch(lastResult) }, [lastResult.spikes.buffer]);
     }
-    
-    // Yield to event loop (allows other messages like pause/getState)
-    // Target 50ms real time per batch
-    const elapsed = performance.now() - batchStart;
-    const delay = Math.max(0, BATCH_MS - elapsed);
-    
-    if (delay > 0) {
-      await new Promise(r => setTimeout(r, delay));
-    }
-    // If delay <= 0, we are running slower than real-time, loop immediately
+  } catch (error) {
+    running = false;
+    self.postMessage({ type: 'error', payload: error.message });
+    return;
   }
+  // Always yield, even when slower than real time, so pause/reset are processed.
+  timer = setTimeout(simulationLoop, Math.max(0, BATCH_MS - (performance.now() - batchStart)));
 }
 
 // Handle errors
